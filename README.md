@@ -1,0 +1,158 @@
+# 📣 Telegram Scraper
+
+Telegram Scraper is a **free and open-source** scraper that gets you **unlimited** detailed Telegram data for free.
+
+## ✨ What Can I Get?
+
+- 📣 **Posts from any public channel on a 1B-user network** — text, views, reactions, media, forwards & link previews
+- 👤 **Exact subscriber counts for any channel, group or bot** — verified tick, numeric id, photo, description, media counters
+- 💬 **Every comment under a post** — author handles, replies, reactions & photos, 50 a page
+- 🔗 **Invite links & collectible gifts decoded** — chat type, member counts, gift owner, rarity & quantity
+
+## 🎥 Example: A Full Telegram Channel Feed
+
+```json
+{
+  "channel": {
+    "username": "durov",
+    "link": "https://t.me/durov",
+    "id": 1006503122,
+    "title": "Pavel Durov",
+    "is_verified": true,
+    "subscribers_count": 10100000,
+    "photos_count": 102,
+    "videos_count": 47,
+    "links_count": 200
+  },
+  "message_count": 20,
+  "next_cursor": 531,
+  "has_more": true,
+  "messages": [
+    {
+      "id": 531,
+      "link": "https://t.me/durov/531",
+      "date": "2026-07-16T20:45:25+00:00",
+      "text": "🩵 Telegram now has a Rich Text Editor.\n\nIt supports tables, headings, inline media, lists, AI content, formulas, and more.\n\n😈 Messaging apps will never be the same!",
+      "author_signature": "Pavel Durov",
+      "is_forwarded": false,
+      "views_count": 5870000,
+      "media": [
+        { "type": "video", "link": "https://t.me/durov/531", "source": "https://cdn4.telesco.pe/file/b231b9b161.mp4?token=cENqyO4hdEwm87KDzbfnKBsh3HukOjC7XYaeJVfG1tPBLFICyfqD8F3EBBOWTlt-RfMtZSyRSQZXKPMohJBjNHZZQldCrVlbzlGG3yWY5E2xD3qBOz-EonhZfJfXUwFlytlZXUFo_uI3q3K8-czE1PTur_bZUXtwvoXkpF4_yb5O0wZPH_BAAxoT-YnERmvAMA8C6VO5fIJxFqrk-gA1wEeTqHO5CspS2xpKKUYn3T5cSOtox39kv1W187..." }
+      ],
+      "reactions": [
+        { "emoji": null, "custom_emoji_id": null, "count": 6300, "is_paid": true },
+        { "emoji": null, "custom_emoji_id": "5265077361648368841", "count": 54700, "is_paid": false }
+      ],
+      "reactions_count": 95210
+    }
+  ]
+}
+```
+
+*Trimmed for readability.*
+
+## 🚀 Unlimited Free Telegram Data — Get It in 60 Seconds
+
+1️⃣ Clone and install:
+```bash
+git clone https://github.com/omkarcloud/telegram-scraper
+cd telegram-scraper
+python -m pip install -r requirements.txt
+```
+
+2️⃣ Start the API:
+```bash
+python run.py
+```
+
+3️⃣ Get your first data:
+```bash
+curl "http://localhost:8000/channels/messages?channel=durov"
+```
+
+```json
+{
+  "channel": {
+    "username": "durov",
+    "link": "https://t.me/durov",
+    "id": 1006503122,
+    "title": "Pavel Durov",
+    "is_verified": true,
+    "subscribers_count": 10100000
+  },
+  "message_count": 20,
+  "next_cursor": 531,
+  "has_more": true,
+  "messages": [
+    {
+      "id": 531,
+      "link": "https://t.me/durov/531",
+      "date": "2026-07-16T20:45:25+00:00",
+      "text": "🩵 Telegram now has a Rich Text Editor.\n\nIt supports tables, headings, inline media, lists, AI content, formulas, and more.\n\n😈 Messaging apps will never be the same!",
+      "views_count": 5870000,
+      "reactions_count": 95210,
+      "media": [{ "type": "video", "link": "https://t.me/durov/531" }]
+    }
+  ]
+}
+```
+
+All 7 endpoints are now live at `http://localhost:8000`.
+
+## 📚 Endpoints
+
+7 endpoints cover everything you need.
+
+| Endpoint | Path | Returns |
+|---|---|---|
+| Channel Messages | `/channels/messages` | 20 posts a page: text, views, reactions, media, forwards, link previews |
+| Channel Details | `/channels/details` | Exact subscriber count, verified tick, id, photo, description, counters |
+| Search Messages | `/messages/search` | Telegram's own full-text search inside a channel, 20 a page |
+| Message Details | `/messages/details` | One post with views, reactions, media, buttons and comment count |
+| Message Comments | `/messages/comments` | 50 comments a page: author, text, replies, reactions, photos |
+| Invite Details | `/invites/details` | What a t.me/+ link opens: type, title, member count, description |
+| Gift Details | `/gifts/details` | Collectible gift owner, model, backdrop, symbol rarity and quantity |
+
+## 🔍 Exploring Parameters
+
+The same API is published on RapidAPI, and its playground is the easiest place to try parameters and see raw responses. Once a request looks right, run it locally for **unlimited free** data.
+
+1. [Subscribe to the free plan](https://rapidapi.com/OmkarCloud/api/best-telegram-scraper-free-1000-calls/pricing) — 1,000 calls/month, no credit card.
+2. [Try the endpoints in the playground](https://rapidapi.com/OmkarCloud/api/best-telegram-scraper-free-1000-calls/playground) — every param is pre-filled, so you see real data in one click.
+3. Copy the generated code and replace `https://best-telegram-scraper-free-1000-calls.p.rapidapi.com` with `http://localhost:8000`. It will now run against your local API.
+
+```python
+import requests
+
+# generated by the playground, host swapped for the local API
+response = requests.get(
+    "http://localhost:8000/channels/messages",
+    params={"channel": "durov"},
+)
+print(response.json())
+```
+
+## 💬 Have Questions? We Have Answers.
+
+You're a developer — we know how hard completing a project can be. So we offer full support: just message us and we'll reply ✅ with a solution within 1 working day.
+
+[![Message Us on WhatsApp about Telegram Scraper](https://raw.githubusercontent.com/omkarcloud/assets/master/images/whatsapp-us.png)](https://api.whatsapp.com/send?phone=918178804274&text=I%20need%20help%20using%20the%20Telegram%20Scraper%20API.)
+
+[![Ask Us by Email about Telegram Scraper](https://raw.githubusercontent.com/omkarcloud/assets/master/images/ask-on-email.png)](mailto:happy.to.help@omkar.cloud?subject=Help%20with%20Telegram%20Scraper%20API&body=I%20need%20help%20using%20the%20Telegram%20Scraper%20API.)
+
+## ⚡ Popular Scrapers by Omkar Cloud
+
+- [**Google Maps Scraper (3,100+ GitHub Stars)**](https://github.com/omkarcloud/google-maps-scraper) — type "dentists in New York", get every business as a ready-to-call lead list: phones, emails, websites & reviews. Up to 100K free leads/month.
+- [**G2 Scraper**](https://www.omkar.cloud/tools/g2-scraper) — G2 product details, ratings & AI-found contacts
+- [**Website Email Contact Scraper**](https://www.omkar.cloud/tools/website-email-contact-scraper) — emails, phones & socials from any website
+- [**AliExpress Scraper**](https://www.omkar.cloud/tools/aliexpress-scraper-api) — live product details, SKU variants, stock & shipping
+- [**Booking Scraper**](https://www.omkar.cloud/tools/booking-scraper) — Booking.com hotels: prices, ratings, rooms & amenities
+- [**Etsy Scraper**](https://www.omkar.cloud/tools/etsy-scraper) — Etsy products: prices, discounts, shops & variations
+
+## ⭐ Love It? [Star It ⭐!](https://github.com/omkarcloud/telegram-scraper)
+
+Star the repo ⭐ and become my star hero!
+
+It's just 1 click, but it means the world to me.
+
+[![Star us on GitHub](https://raw.githubusercontent.com/omkarcloud/google-maps-scraper/master/screenshots/star-us.png)](https://github.com/omkarcloud/telegram-scraper)
