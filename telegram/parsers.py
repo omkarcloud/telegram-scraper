@@ -53,13 +53,15 @@ group / channel invites and a revoked one, two collectible gifts and the
 telegram.org redirect an unknown gift gets.
 """
 import base64
-import json
+import fastjson
 import re
 from urllib.parse import urlparse
 
 from bs4 import BeautifulSoup, NavigableString
 
 from telegram.refs import SITE, channel_link, feed_link, gift_link, invite_link, message_link
+from scraper_utils.values import to_int as _int
+from scraper_utils.text import squashed_any as _clean
 
 _NUMBER_RE = re.compile(r"^(\d+(?:[.,]\d+)?)\s*([KMB])?$", re.I)
 _DIGITS_RE = re.compile(r"\d[\d\s ,]*")
@@ -82,13 +84,6 @@ def _soup(html):
 
 def _text(node, sep=" "):
     return " ".join(node.get_text(sep, strip=True).split()) if node is not None else ""
-
-
-def _clean(value):
-    if value is None:
-        return None
-    value = " ".join(str(value).replace(" ", " ").split())
-    return value or None
 
 
 def _attr(node, name):
@@ -118,13 +113,6 @@ def _absolute(link):
     if link.startswith("/"):
         return SITE + link
     return link
-
-
-def _int(value):
-    try:
-        return int(value)
-    except (TypeError, ValueError):
-        return None
 
 
 def parse_number(text):
@@ -178,7 +166,7 @@ def decode_view(token):
         return None
     try:
         padded = token + "=" * (-len(token) % 4)
-        return json.loads(base64.urlsafe_b64decode(padded).decode("utf-8"))
+        return fastjson.loads(base64.urlsafe_b64decode(padded).decode("utf-8"))
     except Exception:
         return None
 

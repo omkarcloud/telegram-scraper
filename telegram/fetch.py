@@ -60,6 +60,7 @@ import egress
 from scraper_errors import BadRequest, Blocked, NotFound, UpstreamError
 from telegram import parsers
 from telegram.refs import SITE
+from scraper_utils import responses, retry, sessions
 
 IMPERSONATE = "chrome"
 PAGE_TIMEOUT = 30
@@ -121,40 +122,17 @@ def _session():
 def _drop_session():
     """Close the thread's session so a poisoned keep-alive connection (and
     its exit) dies."""
-    sess = getattr(_local, "session", None)
-    _local.session = None
-    if sess is not None:
-        try:
-            sess.close()
-        except Exception:
-            pass
+    sessions.drop(_local)
 
 
 def _retrying(fn):
     """Run fn() under the shared retry policy (TelegramUpstreamError only;
     NotFound / BadRequest surface immediately)."""
-    last = None
-    for attempt in range(1, config.MAX_RETRIES + 1):
-        try:
-            return fn()
-        except TelegramUpstreamError as e:
-            last = e
-            _drop_session()
-            if attempt < config.MAX_RETRIES:
-                time.sleep(config.RETRY_BACKOFF * attempt)
-    raise last
+    return retry.run(fn, config, TelegramUpstreamError, lambda e: _drop_session())
 
 
 def _classify(resp, label):
-    if resp.status_code == 404:
-        raise TelegramNotFound(f"{label} not found")
-    if resp.status_code == 400:
-        raise TelegramBadRequest(resp.text[:200])
-    if resp.status_code in (401, 403, 429):
-        raise TelegramBlocked(f"HTTP {resp.status_code} for {label}")
-    if resp.status_code != 200:
-        raise TelegramUpstreamError(f"HTTP {resp.status_code} for {label}")
-    return resp.text
+    return responses.classify(resp, label, TelegramNotFound, TelegramBadRequest, TelegramBlocked, TelegramUpstreamError)
 
 
 def _get(path, label, params=None):
